@@ -1,0 +1,13 @@
+-- root nodes don't have parents >> parent values = null for root nodes
+-- leaf nodes don,t have childs >> don't exist at the parent columns
+-- inner nodes hace parents and also have childs >> exist at both cols
+*************************************************************************************************
+select b.n, 
+case
+    when b.p is null then "Root"
+    when b.n not in(select p from bst where p is not null) then "Leaf"
+    else "Inner"
+end
+from BST b
+order by b.n;
+*************************************************************************************************
