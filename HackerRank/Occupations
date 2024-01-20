@@ -1,1 +1,17 @@
+Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. 
+The output column headers should be Doctor, Professor, Singer, and Actor, respectively.
 
+Note: Print NULL when there are no more names corresponding to an occupation.
+**********************************************************************************************************
+with cte as (
+select *, row_number() over(partition by Occupation order by name) RN
+from OCCUPATIONS)
+
+select 
+    min(case when occupation = "DOCTOR" then name else NULL end) as DOCTOR,
+    min(case when occupation = "PROFESSOR" then name else NULL end) as PROFESSOR, 
+    min(case when occupation = "SINGER" then name else NULL end) as SINGER, 
+    min(case when occupation = "ACTOR" then name else NULL end) as ACTOR 
+from cte
+group by RN;
+**********************************************************************************************************
