@@ -1,1 +1,11 @@
+A median is defined as a number separating the higher half of a data set from the lower half. 
+Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to  decimal places.
+***************************************************************************************************************
+WITH cte AS (
+    SELECT *, ROW_NUMBER() OVER (ORDER BY LAT_N) AS rn
+    FROM STATION
+)
 
+SELECT format(ROUND(LAT_N, 4),'0.####') AS median
+FROM cte
+WHERE rn in(select floor(count(*)/2)+1 from cte);
