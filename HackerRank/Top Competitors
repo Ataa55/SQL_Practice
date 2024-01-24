@@ -7,3 +7,17 @@ If more than one hacker received full scores in same number of challenges, then 
 - group the results becouse may some hackers solve more than one challenge
 - seelct only the hackers who achieeved the full score for more than one challenge
 - order by count then the id
+***************************************************************************************************************************
+
+select h.hacker_id, h.name
+from Submissions s 
+    join hackers h 
+    on s.hacker_id = h.hacker_id
+    join Challenges c
+    on c.challenge_id = s.challenge_id 
+    join Difficulty d
+    on d.difficulty_level = c.difficulty_level  
+where s.score = d.score
+group by h.hacker_id, h.name
+having count(*) > 1
+order by count(*) desc, h.hacker_id ;
