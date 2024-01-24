@@ -28,4 +28,12 @@ group by h.hacker_id, h.name
 order by ch_count
 
 *************************************************************************************************************************************
+select distinct ch_count from 
+(select h.hacker_id, count(challenge_id ) as ch_count
+from Hackers h
+join challenges c
+on h.hacker_id = c.hacker_id
+group by h.hacker_id 
+having count(challenge_id ) > 1);
+*************************************************************************************************************************************
 
