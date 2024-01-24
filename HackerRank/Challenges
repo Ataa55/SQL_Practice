@@ -4,5 +4,28 @@ Sort your results by the total number of challenges in descending order.
 If more than one student created the same number of challenges, then sort the result by hacker_id.
 If more than one student created the same number of challenges and the count is less than the maximum number of challenges created, 
 then exclude those students from the result.
+*************************************************************************************************************************************
+with cte as
+(select h.hacker_id , h.name, count(c.challenge_id) ch_count
+from hackers h 
+join challenges c
+on h.hacker_id = c.hacker_id
+group by h.hacker_id, h.name)
 
+select * from cte
+where ch_count in (select count(ch_count) 
+                   from cte 
+                   group by ch_count
+                   having count(ch_count) > 1)
+or ch_count = (select max(ch_count) from cte)
+order by ch_count desc, hacker_id
+*************************************************************************************************************************************
+select h.hacker_id, name, count(challenge_id) as ch_count
+from hackers h
+join challenges c
+on h.hacker_id = c.hacker_id
+group by h.hacker_id, h.name
+order by ch_count
+
+*************************************************************************************************************************************
 
