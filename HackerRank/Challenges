@@ -5,35 +5,29 @@ If more than one student created the same number of challenges, then sort the re
 If more than one student created the same number of challenges and the count is less than the maximum number of challenges created, 
 then exclude those students from the result.
 *************************************************************************************************************************************
-with cte as
-(select h.hacker_id , h.name, count(c.challenge_id) ch_count
-from hackers h 
+- select the max challenge count
+- next select the duplicate challenge count that are smallen than the maximum
+- then select those students that created chllenges not smaller and the same equal to there collegues
+*************************************************************************************************************************************
+with cte as (select h.hacker_id as hID, name, count(challenge_id) as ch_count
+from hackers h
 join challenges c
 on h.hacker_id = c.hacker_id
 group by h.hacker_id, h.name)
 
-select * from cte
-where ch_count in (select count(ch_count) 
-                   from cte 
-                   group by ch_count
-                   having count(ch_count) > 1)
-or ch_count = (select max(ch_count) from cte)
-order by ch_count desc, hacker_id
-*************************************************************************************************************************************
-select h.hacker_id, name, count(challenge_id) as ch_count
-from hackers h
-join challenges c
-on h.hacker_id = c.hacker_id
-group by h.hacker_id, h.name
-order by ch_count
+, dup_cte as (
+select ch_count from(
+    select ch_count, count(ch_count) as count
+        from cte
+        group by ch_count
+        having count(ch_count) > 1 and 
+            ch_count != (select max(ch_count) from cte)
+) as t)
 
-*************************************************************************************************************************************
-select distinct ch_count from 
-(select h.hacker_id, count(challenge_id ) as ch_count
-from Hackers h
-join challenges c
-on h.hacker_id = c.hacker_id
-group by h.hacker_id 
-having count(challenge_id ) > 1);
-*************************************************************************************************************************************
+select hID, name, ch_count 
+from cte
+where ch_count >= (select max(ch_count) from cte) 
+    or ch_count not in (select * from dup_cte)
+order by ch_count desc, hID
+**************************************************************************************************************************************
 
