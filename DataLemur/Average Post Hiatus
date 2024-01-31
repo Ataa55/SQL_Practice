@@ -1,0 +1,6 @@
+select user_id, max(post_date::DATE) - min(post_date::DATE)
+
+from posts 
+where DATE_PART('year', post_date) = '2021'
+GROUP BY user_id
+having count(user_id) > 2
