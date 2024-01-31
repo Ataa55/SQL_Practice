@@ -1,0 +1,16 @@
+Assume you're given a table containing job postings from various companies on the LinkedIn platform.
+Write a query to retrieve the count of companies that have posted duplicate job listings.
+*********************************************************************************************************************
+- count the duplicates for each company
+- count the duplicated companies
+*********************************************************************************************************************
+with cte as (
+  SELECT company_id, count(company_id) as dup
+
+  from job_listings
+  group by company_id
+  having count(company_id) > 1) 
+
+select count(dup) as duplicate_companies 
+from cte
+*********************************************************************************************************************
