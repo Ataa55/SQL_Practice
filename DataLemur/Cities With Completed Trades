@@ -4,3 +4,11 @@ Write a query to retrieve the top three cities that have the highest number of c
 Output the city name and the corresponding number of completed trade orders.
 
 *************************************************************************************************************
+select city, count(city) as total_orders
+from trades t inner join users u
+on t.user_id = u.user_id
+where t.status = 'Completed'
+group by city
+order by total_orders desc
+limit 3 
+*************************************************************************************************************
