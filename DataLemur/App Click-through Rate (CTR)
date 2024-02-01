@@ -6,5 +6,16 @@ Definition and note:
 Percentage of click-through rate (CTR) = 100.0 * Number of clicks / Number of impressions
 To avoid integer division, multiply the CTR by 100.0, not 100
 **********************************************************************************************************************
- 
+with cte as (
+ select app_id,
+  sum(case when event_type = 'impression' then 1 else 0 end ) as impression_n,
+  sum(case when event_type = 'click' then 1 else 0 end ) as click_n
+from events
+where date_part('year',timestamp) = '2022'
+group by app_id
+)
+
+select app_id, round(100.0 * click_n/ impression_n, 2)
+
+from cte
 **********************************************************************************************************************
