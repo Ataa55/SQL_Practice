@@ -7,5 +7,9 @@ Definition:
 action_date refers to the date when users activated their accounts and confirmed their sign-up through text messages.
 
 *****************************************************************************************************************************
-
+select user_id
+from emails e inner join texts t 
+on e.email_id = t.email_id 
+where t.action_date = e.signup_date + INTERVAL '1 day'
+    and t.signup_action = 'Confirmed'
 *****************************************************************************************************************************
