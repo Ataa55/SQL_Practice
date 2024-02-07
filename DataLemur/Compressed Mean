@@ -2,5 +2,11 @@ You're trying to find the mean number of items per order on Alibaba, rounded to 
 which includes information on the count of items in each order (item_count table) 
 and the corresponding number of orders for each item count (order_occurrences table).
 ************************************************************************************************************************
+with calc_cte as (
+SELECT sum(item_count::DECIMAL * order_occurrences) as total_items, 
+sum(order_occurrences) as total_orders
+from items_per_order)
 
+select round(total_items / total_orders,1) as mean
+from calc_cte; 
 ************************************************************************************************************************
