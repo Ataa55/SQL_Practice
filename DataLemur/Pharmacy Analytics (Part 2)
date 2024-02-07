@@ -7,5 +7,10 @@ and calculate the total amount of losses incurred.
 Output the manufacturer's name, the number of drugs associated with losses, and the total losses in absolute value.
 Display the results sorted in descending order with the highest losses displayed at the top.
 ******************************************************************************************************************************
-
+select manufacturer, count(drug), 
+abs(sum(total_sales - cogs)) as total_loss
+from pharmacy_sales 
+where total_sales - cogs <= 0
+group by manufacturer
+order by total_loss desc
 ******************************************************************************************************************************
