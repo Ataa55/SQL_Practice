@@ -9,5 +9,21 @@ time spent sending / (Time spent sending + Time spent opening)
 Time spent opening / (Time spent sending + Time spent opening)
 To avoid integer division in percentages, multiply by 100.0 and not 100.
 **************************************************************************************************************************
+- first calcuulate the time required in new cte
+- then calculate the required prec
+**************************************************************************************************************************
+with cte as(
+SELECT ab.age_bucket, 
+  sum(case when a.activity_type = 'open' then a.time_spent else 0 end) as total_open,
+  sum(case when a.activity_type = 'send' then a.time_spent else 0 end) as total_send,
+  sum(a.time_spent) as total_time
+from activities a  
+inner join age_breakdown ab
+on a.user_id = ab.user_id
+where a.activity_type in ('open', 'send')
+GROUP BY ab.age_bucket)
 
+select age_bucket, round(100 * total_send / total_time, 2) as send_perc,
+                   round(100 * total_open / total_time, 2) as open_perc
+from cte
 **************************************************************************************************************************
