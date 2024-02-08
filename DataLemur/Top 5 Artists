@@ -7,5 +7,18 @@ Display the top 5 artist names in ascending order, along with their song appeara
 If two or more artists have the same number of song appearances, they should be assigned the same ranking, 
 and the rank numbers should be continuous (i.e. 1, 2, 2, 3, 4, 5).
 *******************************************************************************************************************
+with Top_ranked_cte as (
+SELECT artist_name, 
+    dense_rank() over(order by count(s.song_id) desc) as artist_rank
+FROM global_song_rank g
+inner join songs s 
+on g.song_id = s.song_id
+inner join artists a
+on s.artist_id = a.artist_id
+where rank < 11
+GROUP BY a.artist_name)
 
+select * 
+from Top_ranked_cte
+where artist_rank < 6
 *******************************************************************************************************************
