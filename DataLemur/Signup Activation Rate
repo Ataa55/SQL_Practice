@@ -15,5 +15,8 @@ The analyst is interested in the activation rate of specific users in the emails
 which may not include all users that could potentially be found in the texts table.
 For example, user 123 in the emails table may not be in the texts table and vice versa.
 ****************************************************************************************************************************
-
+SELECT round(1.0 * sum(case when signup_action = 'Confirmed' then 1 else 0 end)/ count(signup_action),2) 
+FROM emails e
+inner JOIN texts t
+ on e.email_id = t.email_id;
 ****************************************************************************************************************************
