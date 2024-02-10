@@ -2,5 +2,32 @@ Assume you're given a table containing information on Facebook user actions.
 Write a query to obtain number of monthly active users (MAUs) in July 2022, 
 including the month in numerical format "1, 2, 3".
 *******************************************************************************
+with filtered_cte as (
+SELECT *,  
+    extract(month from event_date) as month 
+    FROM user_actions
+    where extract(month from event_date)  = 6
+    union 
+    SELECT *,  
+    extract(month from event_date) as month
+    FROM user_actions
+    where extract(month from event_date)  = 7)
 
+, ranked_cte as (
+    select user_id, event_type, month, rank() 
+                                   over(PARTITION BY user_id order by month desc)
+    from filtered_cte)
+
+, users_cte as ( 
+    select user_id, count(DISTINCT rank)  
+    from ranked_cte
+    group by user_id
+    having count(DISTINCT rank) >= 2)
+
+select 
+  max(month) as month, 
+  count (DISTINCT user_id) as monthly_active_users
+from ranked_cte
+where user_id in (SELECT user_id 
+                  from users_cte)
 *******************************************************************************
