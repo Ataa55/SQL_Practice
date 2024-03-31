@@ -5,11 +5,17 @@ What percentage of phone calls are international? Round the result to 1 decimal.
 Assumption:
 The caller_id in phone_info table refers to both the caller and receiver.
 ******************************************************************************************************************************************
-SELECT 
-round(100.0 * sum(case when c.country_id != r.country_id then 1 else 0 end)/count(*),1)    
-FROM phone_calls p 
-LEFT JOIN phone_info c
-on p.caller_id = c.caller_id
-left join phone_info r
-on p.receiver_id = r.caller_id
+with maping_cte as (
+select call.country_id as caller_country, 
+res.country_id as receiver_country
+from phone_calls pc 
+inner join phone_info call 
+on pc.caller_id = call.caller_id
+inner join phone_info res
+on pc.receiver_id = res.caller_id)
+
+select 
+   round(100.0 * sum(case when  caller_country != receiver_country then 1 else 0 END) / count(*),1) as international_calls_pct
+    from maping_cte 
+   
 ******************************************************************************************************************************************
