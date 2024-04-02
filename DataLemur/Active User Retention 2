@@ -1,1 +1,23 @@
+with filtered_cte as (
+SELECT *, Extract('month' from event_date) as month
+FROM user_actions
+where (select Extract('month' from event_date)) = (select 
+                                                      max(EXTRACT('month' from event_date)) 
+                                                                        from user_actions) 
+UNION
+SELECT *, Extract('month' from event_date) as month
+FROM user_actions
+where (select Extract('month' from event_date)) = (select 
+                                                      max(EXTRACT('month' from event_date)) - 1 
+                                                                        from user_actions))
 
+, ranked_cte as (SELECT *, dense_rank() 
+                over(PARTITION BY user_id ORDER BY month) as rn
+          from filtered_cte)
+          
+SELECT month, 
+       count(DISTINCT user_id) as  monthly_active_users
+    from ranked_cte 
+where rn >= 2 
+group by month
+;
