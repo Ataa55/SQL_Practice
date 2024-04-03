@@ -1,0 +1,32 @@
+Google's marketing team is making a Superbowl commercial and needs a simple statistic to put on their TV ad: the median number of searches a person made last year.
+
+However, at Google scale, querying the 2 trillion searches is too costly. Luckily, you have access to the summary table which tells you the number of searches made last year and how many Google users fall into that bucket.
+
+Write a query to report the median of searches made by a user. Round the median to one decimal point.
+****************************************************************************************************
+with cte as (
+select 
+  searches, 
+  GENERATE_SERIES(1,num_users)
+  
+from search_frequency 
+order by searches)
+
+, ordered_cte as (
+select 
+  row_number() over(order by searches) as rank,
+  searches
+from cte)
+
+select 
+  rank, 
+  searches
+from ordered_cte
+where rank in (
+select rank 
+from ordered_cte 
+where rank in ((select count(*)/2 from ordered_cte) 
+or  (select (COUNT(*)/2 + 1) from ordered_cte ))
+
+
+****************************************************************************************************
