@@ -10,3 +10,11 @@ Each row of this table indicates the id of a customer, their name, and the id of
 Find the names of the customer that are not referred by the customer with id = 2.
 
 Return the result table in any order.
+
+*********************************************************************************************
+select name
+from Customer
+where referee_id != 2 
+    or referee_id is null
+*********************************************************************************************
+note here that we must add the "or referee_id is null" condition becouse in sql we can't com[are with nulls directly
