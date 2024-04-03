@@ -19,14 +19,7 @@ select
 from cte)
 
 select 
-  rank, 
-  searches
+  PERCENTILE_CONT(0.5) WITHIN group(order by searches) as median 
 from ordered_cte
-where rank in (
-select rank 
-from ordered_cte 
-where rank in ((select count(*)/2 from ordered_cte) 
-or  (select (COUNT(*)/2 + 1) from ordered_cte ))
-
 
 ****************************************************************************************************
