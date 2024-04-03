@@ -10,5 +10,15 @@ Churn: Advertisers who have made payments in the past but have not made any rece
 Resurrect: Advertisers who have not made a recent payment but may have made a previous payment and have made a payment again recently.
 
 ********************************************************************************************************************
+SELECT 
+  user_id,
+  case 
+    when user_id not in (select user_id from daily_pay) then 'churn'
+    when user_id in (select user_id from daily_pay) and status in ('new', 'EXISTING', 'RESURRECT') then 'EXISTING'
+    when user_id in (select user_id from daily_pay) and status = 'CHURN' then 'RESURRECT'
+    when user_id in (select user_id from daily_pay) and status is null then 'NEW'
+    end as new_status
 
+FROM advertiser
+order by user_id;
 ********************************************************************************************************************
