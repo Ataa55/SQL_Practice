@@ -14,11 +14,35 @@ Non-prime items must always be available in stock to meet customer demand, so th
 Item count should be whole numbers (integers).
 
 *********************************************************************************************************
-
-1 - calculate couny of each item type and the total sum of it's area
+1 - calculate count of each item type and the total sum of it's area
 2 - calc the total area that all prime types will take
 3 - calc the remaining area then calc what this area will take from the not prime item types
 *********************************************************************************************************
+with cte as (
+select item_type, 
+       sum(square_footage) as total_foot, 
+       count(item_type) as item_count
+from inventory 
+GROUP BY (item_type))
+, prime_item as (
+select 
+  item_type,
+  total_foot,  
+  floor(500000/ total_foot) * item_count as item_count
+from cte
+where item_type = 'prime_eligible')
+
+select 
+  item_type, 
+  case
+    when item_type = 'prime_eligible'
+      then (floor(500000/ total_foot) * item_count)
+    when item_type = 'not_prime'
+      then floor((500000 - (select floor(500000/total_foot) * total_foot from prime_item)) / total_foot) * item_count
+      
+  end as item_count
+  from cte
+  order by item_type desc;
 
 
 
