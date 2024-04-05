@@ -8,17 +8,19 @@ New: Advertisers who are newly registered and have made their first payment.
 Existing: Advertisers who have made payments in the past and have recently made a current payment.
 Churn: Advertisers who have made payments in the past but have not made any recent payment.
 Resurrect: Advertisers who have not made a recent payment but may have made a previous payment and have made a payment again recently.
-
 ********************************************************************************************************************
 SELECT 
-  user_id,
+  COALESCE(a.user_id, d.user_id) as user_id,
   case 
-    when user_id not in (select user_id from daily_pay) then 'churn'
-    when user_id in (select user_id from daily_pay) and status in ('new', 'EXISTING', 'RESURRECT') then 'EXISTING'
-    when user_id in (select user_id from daily_pay) and status = 'CHURN' then 'RESURRECT'
-    when user_id in (select user_id from daily_pay) and status is null then 'NEW'
+    when a.user_id not in (select user_id from daily_pay) then 'CHURN'
+    when a.user_id in (select user_id from daily_pay) and status in ('NEW', 'EXISTING', 'RESURRECT') then 'EXISTING'
+    when a.user_id in (select user_id from daily_pay) and status = 'CHURN' then 'RESURRECT'
+    when a.user_id in (select user_id from daily_pay) and status is null then 'NEW'
+    when d.user_id not in (select user_id from advertiser) and status is null then 'NEW'
     end as new_status
 
-FROM advertiser
+FROM advertiser a
+FULL OUTER JOIN daily_pay d
+on a.user_id = d.user_id
 order by user_id;
 ********************************************************************************************************************
