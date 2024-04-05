@@ -9,6 +9,8 @@ Existing: Advertisers who have made payments in the past and have recently made 
 Churn: Advertisers who have made payments in the past but have not made any recent payment.
 Resurrect: Advertisers who have not made a recent payment but may have made a previous payment and have made a payment again recently.
 ********************************************************************************************************************
+-- merge the tables with full outer join becouse some user_ids aren't present at one of the tables
+********************************************************************************************************************
 SELECT 
   COALESCE(a.user_id, d.user_id) as user_id,
   case 
