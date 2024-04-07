@@ -67,3 +67,13 @@ on v.visit_id  = t.visit_id
 where t.visit_id is null
 group by customer_id
 *************************************************************************************************
+Soloution 2
+select
+    customer_id,
+    count(visit_id) as count_no_trans 
+from Visits
+where visit_id not in (select visit_id from Transactions)
+group by customer_id
+*************************************************************************************************
+
+
