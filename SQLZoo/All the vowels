@@ -1,0 +1,15 @@
+SELECT name
+   FROM world
+WHERE name LIKE '%A%'
+  AND name LIKE '%a%'
+  AND name LIKE '%E%'
+  AND name LIKE '%e%'
+  AND name LIKE '%I%'
+  AND name LIKE '%i%'
+  AND name LIKE '%O%'
+  AND name LIKE '%o%'
+  AND name LIKE '%U%'
+  AND name LIKE '%u%'
+  AND name not LIKE '% %';
+
+
