@@ -1,0 +1,11 @@
+select 
+      name, 
+      concat(round(population/
+                      (select
+                              population 
+                       from world 
+                       where name = "Germany") * 
+                         100), "%") as percentage
+from world
+where continent = "Europe"
+order by name
