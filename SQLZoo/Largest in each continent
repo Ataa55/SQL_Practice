@@ -1,0 +1,8 @@
+select B.name, A.continent, A.max_
+from world B 
+  join (select 
+      continent,  
+      max(area) as max_
+  from world 
+  group by continent) A
+on B.continent = A.continent
