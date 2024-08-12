@@ -5,6 +5,31 @@ select
       population,
       population <= 25000000 as pop_flag
 from world)
+, ranked_cte as (
 select
        name,
-         
+       continent,  
+       population,
+       dense_rank() over(partition by continent order by pop_flag) as rank
+from cte)
+
+, rank_count as(
+select  
+      continent, 
+      count(DISTINCT rank) as distinct_count 
+from ranked_cte  
+group by continent)
+
+select 
+      c.name,
+      c.continent, 
+      c.population
+
+from cte c
+join rank_count r
+on c.continent = r.continent
+where r.distinct_count = 1
+
+
+
+
