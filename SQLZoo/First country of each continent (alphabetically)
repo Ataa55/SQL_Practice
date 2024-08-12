@@ -1,0 +1,8 @@
+with cte as (
+select 
+      continent, 
+      name, 
+      Row_number() over(PARTITION by continent order by name) as row_num  
+from world)
+select continent, name
+from cte where row_num = 1  
