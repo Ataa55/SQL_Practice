@@ -1,0 +1,10 @@
+with cte as (
+select 
+      name, 
+      continent,
+      population,
+      population <= 25000000 as pop_flag
+from world)
+select
+       name,
+         
