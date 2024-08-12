@@ -1,8 +1,9 @@
-select B.name, A.continent, A.max_
+select A.continent, B.name, A.area
 from world B 
   join (select 
       continent,  
-      max(area) as max_
+      max(area) as area
   from world 
   group by continent) A
 on B.continent = A.continent
+and A.area = B.area
