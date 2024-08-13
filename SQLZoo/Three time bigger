@@ -6,3 +6,25 @@ select
 from world w
 where w.population > all (select 3*population from world x2 where w.continent = x2.continent
 and w.name <> x2.name)
+
+##sol2 (i think this soloution is more optimized, besouse there is no sub query within the where cndition)
+
+select t.name, w.continent from(
+select 
+       w.name as name,
+       count(*) as all_neighbours,
+       sum(case
+               when w.population > x.population *3
+                   then 1
+                   else 0
+                end) as triple_neighbour
+
+from world w
+join (select * from world) x
+on w.continent = x.continent 
+and w.name <> x.name
+group by w.name) as t
+join world w
+on w.name = t.name
+where all_neighbours = triple_neighbour
+order by name
