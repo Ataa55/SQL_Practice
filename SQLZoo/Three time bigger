@@ -1,0 +1,8 @@
+##sol1
+
+select 
+      w.name,
+      w.continent
+from world w
+where w.population > all (select 3*population from world x2 where w.continent = x2.continent
+and w.name <> x2.name)
