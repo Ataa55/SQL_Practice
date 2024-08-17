@@ -1,0 +1,9 @@
+select 
+      Distinct matchid,
+      mdate,
+      count(matchid) over(partition by matchid)
+      
+from game join goal 
+on matchid = id
+ WHERE (team1 = 'GER' OR team2 = 'GER' ) 
+ and teamid = 'GER'
