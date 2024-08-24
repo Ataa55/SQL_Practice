@@ -1,0 +1,16 @@
+select 
+      name 
+from 
+     movie join casting
+on 
+     movie.id = casting.movieid
+and 
+     ord = 1
+join actor
+on 
+     casting.actorid = actor.id
+group by name
+having count(name) >= 15
+
+
+     
