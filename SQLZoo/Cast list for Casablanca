@@ -1,0 +1,12 @@
+select 
+      name
+from  
+      casting join movie 
+on 
+   casting.movieid = movie.id
+join 
+      actor
+on  
+   actor.id = casting.actorid
+where 
+     movie.title = "Casablanca"
