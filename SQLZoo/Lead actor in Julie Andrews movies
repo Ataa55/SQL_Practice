@@ -1,0 +1,13 @@
+select 
+      title, name
+from 
+    movie join casting
+on 
+  (movie.id = casting.movieid and ord =1)
+join actor
+on 
+  (actorid = actor.id)
+where 
+movie.id in 
+(select movieid from casting where actorid in (select id from 
+actor where name = "Julie Andrews"))
