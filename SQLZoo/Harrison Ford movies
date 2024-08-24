@@ -1,0 +1,6 @@
+select title
+from  casting join movie 
+on casting.movieid = movie.id
+join actor
+on actor.id = casting.actorid
+where actor.name = "Harrison Ford"
