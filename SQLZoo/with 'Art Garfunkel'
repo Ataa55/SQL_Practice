@@ -1,0 +1,13 @@
+select name
+from casting join actor
+on casting.actorid = actor.id
+where movieid in
+(
+select movie.id 
+from movie join casting
+on movie.id = casting.movieid
+join actor 
+on casting.actorid = actor.id
+where name = "Art Garfunkel")
+
+
