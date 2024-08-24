@@ -1,0 +1,13 @@
+select 
+      yr,
+      count(title)
+from 
+    movie join casting
+on
+  movie.id = casting.movieid
+join actor
+on 
+  casting.actorid = actor.id
+where name = "Rock Hudson"
+group by yr
+having count(title) > 2
